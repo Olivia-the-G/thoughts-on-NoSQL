@@ -24,7 +24,7 @@ const reactionSchema = new Schema(
 );
 
 // format date 
-reactionSchema.virtual('formatDate').get(function() {
+reactionSchema.virtual('Date').get(function() {
   return moment(reactionSchema.createdAt).format('MMMM, DD, YYYY');
 });
 

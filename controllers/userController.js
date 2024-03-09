@@ -40,11 +40,11 @@ module.exports = {
   // update user by id
   async updateUser(req, res) {
     try {
-      const updatedUser = await User.findOneAndUpdate(req.params.userId, req.body, {
+      const user = await User.findOneAndUpdate(req.params.userId, req.body, {
         new: true,
         runValidators: true,
       });
-      res.json(updatedUser);
+      res.json(user);
     } catch (err) {
       res.status(400).json(err);
     }

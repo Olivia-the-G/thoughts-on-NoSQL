@@ -14,7 +14,7 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    username: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
@@ -29,7 +29,7 @@ const thoughtSchema = new Schema(
 );
 
 // format data
-thoughtSchema.virtual('formatDate').get(function() {
+thoughtSchema.virtual('Date').get(function() {
   return moment(thoughtSchema.createdAt).format('MMMM, DD, YYYY');
 });
 

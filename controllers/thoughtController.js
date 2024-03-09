@@ -30,8 +30,11 @@ module.exports = {
       const thought = await Thought.create(req.body);
       // update the user's thoughts array
       const user = await User.findOne({ _id: req.body.userId });
-      user.thoughts.push(thought._id);
-      await user.save();
+      if (thought) {
+        console.log(thought);
+        user.thoughts.push(thought._id);
+        await user.save();
+      }
       return res.json(thought);
     } catch (err) {
       return res.status(400).json(err);
@@ -41,17 +44,30 @@ module.exports = {
   async updateThought(req, res) {
     try {
       // update the thought
-      const updatedThought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, req.body, {
-        new: true,
-        runValidators: true,
-      });
-      // update the user's thoughts array
-      const user = await User.findOne({ thoughts: req.params.thoughtId });
-      user.thoughts.pull(req.params.thoughtId);
-      await user.save();
-      return res.json(updatedThought);
+      const thought = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        req.body,
+        { new: true }
+      );
+
+      if (!thought) {
+        return res.status(404).json({ message: 'Thought not found' });
+      }
+      // Update the user's thoughts array
+      const user = await User.findOne({ _id: req.body.userId });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Check if the thought is already in the user's thoughts array
+      if (!user.thoughts.includes(thought._id)) {
+        user.thoughts.push(thought._id);
+        await user.save();
+      }
+
+      return res.json(thought);
     } catch (err) {
-      return res.status(400).json(err);
+      return res.status(400).json({ message: err.message });
     }
   },
   // delete thought by id
