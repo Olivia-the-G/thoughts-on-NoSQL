@@ -83,7 +83,7 @@ module.exports = {
       const user = await User.findOneAndUpdate(
         { _id: thought.userId },
         { $pull: { thoughts: thought._id } },
-        { new: true }
+        { runValidators: true, new: true }
       );
 
       res.json({ message: 'Thought deleted' });
@@ -91,6 +91,7 @@ module.exports = {
       return res.status(400).json(err);
     }
   },
+
   // add reaction to thought
   async addReaction(req, res) {
     try {
@@ -104,19 +105,21 @@ module.exports = {
       res.status(400).json(err);
     }
   },
+
   // remove reaction from thought
   async removeReaction(req, res) {
     try {
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        { $pull: { reactions: req.params.reactionId } },
-        { new: true }
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
+        { runValidators: true, new: true }
       );
 
       if (!thought) {
         res.status(404).json({ message: 'no thoughts here' });
       }
-      res.json(thought);
+
+      res.json({ message: 'Reaction deleted' });
     } catch (err) {
       res.status(400).json(err);
     }
