@@ -42,7 +42,7 @@ module.exports = {
           message: "Created thought but could not find user"
         });
       }
-      res.json(thought, 'Thought created');
+      res.json('Thought created');
     } catch (err) {
       console.log(err)
       return res.status(400).json(err);
@@ -68,6 +68,7 @@ module.exports = {
       res.status(400).json(err);
     }
   },
+
   // delete thought by id
   async deleteThought(req, res) {
     try {
@@ -77,7 +78,15 @@ module.exports = {
       if (!thought) {
         return res.status(404).json({ message: 'no thoughts here' });
       }
-      res.json(thought);
+
+      // update the user's thoughts array
+      const user = await User.findOneAndUpdate(
+        { _id: thought.userId },
+        { $pull: { thoughts: thought._id } },
+        { new: true }
+      );
+
+      res.json({ message: 'Thought deleted' });
     } catch (err) {
       return res.status(400).json(err);
     }
