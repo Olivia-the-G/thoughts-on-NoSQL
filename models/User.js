@@ -16,13 +16,13 @@ const userSchema = new Schema(
       match: /^\S+@\S+\.\S+$/,
     },
     thoughts: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Thought',
-      }],
+      type: Schema.Types.ObjectId,
+      ref: 'Thought',
+    }],
     friends: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-      }],
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
   },
   {
     toJSON: {
@@ -33,7 +33,7 @@ const userSchema = new Schema(
 );
 
 // get user friend count
-userSchema.virtual('friendCount').get(function() {
+userSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
 
