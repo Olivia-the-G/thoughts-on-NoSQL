@@ -55,28 +55,17 @@ module.exports = {
       // update the thought
       const thought = await Thought.findOneAndUpdate(
         { _id: req.params.thoughtId },
-        req.body,
-        { new: true }
+        { $set: req.body },
+        { runValidators: true, new: true }
       );
 
       if (!thought) {
         return res.status(404).json({ message: 'Thought not found' });
       }
-      // Update the user's thoughts array
-      const user = await User.findOne({ _id: req.body.userId });
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
 
-      // Check if the thought is already in the user's thoughts array
-      if (!user.thoughts.includes(thought._id)) {
-        user.thoughts.push(thought._id);
-        await user.save();
-      }
-
-      return res.json(thought);
+      res.json(thought);
     } catch (err) {
-      return res.status(400).json({ message: err.message });
+      res.status(400).json(err);
     }
   },
   // delete thought by id
