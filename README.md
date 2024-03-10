@@ -3,13 +3,13 @@
 ## Description 
 This back-end application contains a functional and complete social media API made with, you guessed it, **NoSQL - MongoDB**.
 
+In addition - uses an **Express.js** server and Moment.js to format timestamps. 
+
 ## Table of Contents
 
 - [Demo](#demo)
 - [License](#license)
 - [Contact](#contact)
-
-In addition - uses an **Express.js** server and Moment.js to format timestamps. 
 
 ## Demo
 
