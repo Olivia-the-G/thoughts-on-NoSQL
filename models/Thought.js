@@ -14,10 +14,10 @@ const thoughtSchema = new Schema(
       type: Date,
       default: Date.now,
     },
-    userId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
+    // userId: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'User',
+    // },
     reactions: [Reaction]
   },
   {
@@ -34,7 +34,7 @@ thoughtSchema.virtual('Date').get(function() {
 });
 
 // get reaction count 
-reactionSchema.virtual('reactionCount').get(function() {
+thoughtSchema.virtual('reactionCount').get(function() {
   return this.reactions.length;
 });
 

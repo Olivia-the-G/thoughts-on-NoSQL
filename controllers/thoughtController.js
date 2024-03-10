@@ -5,11 +5,12 @@ module.exports = {
   async getThoughts(req, res) {
     try {
       const thoughts = await Thought.find();
-      return res.json(thoughts);
+      res.json(thoughts);
     } catch (err) {
-      return res.status(400).json(err);
+      res.status(400).json(err);
     }
   },
+
   // get single thought by id
   async getSingleThought(req, res) {
     try {
@@ -18,28 +19,36 @@ module.exports = {
       if (!thought) {
         return res.status(404).json({ message: 'no thoughts, head empty' });
       }
-      return res.json(thought);
+      res.json(thought);
     } catch (err) {
-      return res.status(400).json(err);
+      res.status(400).json(err);
     }
   },
+
   // create a new thought
   async createThought(req, res) {
     try {
       // create the thought
       const thought = await Thought.create(req.body);
       // update the user's thoughts array
-      const user = await User.findOne({ _id: req.body.userId });
-      if (thought) {
-        console.log(thought);
-        user.thoughts.push(thought._id);
-        await user.save();
+      const user = await User.findOneAndUpdate(
+        { _id: req.body.userId },
+        { $addToSet: { thoughts: thought._id } },
+        { new: true }
+      );
+      
+      if (!user) {
+        return res.status(404).json({
+          message: "Created thought but could not find user"
+        });
       }
-      return res.json(thought);
+      res.json(thought, 'Thought created');
     } catch (err) {
+      console.log(err)
       return res.status(400).json(err);
     }
   },
+
   // update thought by id
   async updateThought(req, res) {
     try {
